@@ -175,7 +175,7 @@ const InvitationCard = () => {
                 </button>
               </div>
 
-              {/* Nút Không - di chuyển random */}
+              {/* Nút Không - di chuyển random  */}
               <div className="flex justify-center">
                 <button
                   ref={noButtonRef}
