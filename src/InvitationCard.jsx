@@ -22,32 +22,32 @@ const InvitationCard = () => {
   const getRandomPosition = () => {
     if (!noButtonRef.current) return { top: 0, left: 0 };
 
-    const padding = 20;
+    const button = noButtonRef.current.getBoundingClientRect();
+    
+    // Lưu width của button để giữ nguyên kích thước khi fixed
+    setButtonWidth(button.width);
+    
+    // Giới hạn vị trí trong viewport (màn hình)
+    const padding = 16;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     
-    // Kích thước button cố định
-    const btnWidth = 140;
-    const btnHeight = 56;
+    // Tính toán vùng an toàn cho button (thêm buffer để tránh button bị cắt)
+    const buttonWidth = button.width + 8;
+    const buttonHeight = button.height + 8;
     
-    // Khung an toàn - safe area để button luôn nhìn thấy được
-    // Giữ button trong vùng từ (20px, 20px) đến (viewport - 20px - btnWidth/Height)
     const minTop = padding;
-    const maxTop = Math.max(padding, viewportHeight - btnHeight - padding);
+    const maxTop = Math.max(padding, viewportHeight - buttonHeight - padding);
     const minLeft = padding;
-    const maxLeft = Math.max(padding, viewportWidth - btnWidth - padding);
+    const maxLeft = Math.max(padding, viewportWidth - buttonWidth - padding);
     
-    // Random vị trí trong phạm vi an toàn
-    const randomTop = minTop + Math.random() * Math.max(0, maxTop - minTop);
-    const randomLeft = minLeft + Math.random() * Math.max(0, maxLeft - minLeft);
-    
-    // Đảm bảo luôn nằm trong khung an toàn
-    const finalTop = Math.max(minTop, Math.min(randomTop, maxTop));
-    const finalLeft = Math.max(minLeft, Math.min(randomLeft, maxLeft));
+    // Random vị trí trong vùng an toàn
+    const randomTop = minTop + Math.random() * (maxTop - minTop);
+    const randomLeft = minLeft + Math.random() * (maxLeft - minLeft);
     
     return {
-      top: Math.round(finalTop),
-      left: Math.round(finalLeft)
+      top: Math.round(randomTop),
+      left: Math.round(randomLeft)
     };
   };
 
@@ -176,10 +176,7 @@ const InvitationCard = () => {
               </div>
 
               {/* Nút Không - di chuyển random */}
-              <div className="flex justify-center relative min-h-[56px]">
-                {clickCount > 0 && (
-                  <div className="w-full h-14"></div>
-                )}
+              <div className="flex justify-center">
                 <button
                   ref={noButtonRef}
                   onClick={handleNoClick}
@@ -187,12 +184,11 @@ const InvitationCard = () => {
                     position: clickCount > 0 ? 'fixed' : 'static',
                     top: clickCount > 0 ? `${noButtonPosition.top}px` : 'auto',
                     left: clickCount > 0 ? `${noButtonPosition.left}px` : 'auto',
-                    width: clickCount > 0 ? '140px' : 'auto',
+                    width: clickCount > 0 ? `${buttonWidth}px` : 'auto',
                     transition: `all ${transitionDuration}ms ease-out`,
                     zIndex: 50,
-                    pointerEvents: 'auto',
                   }}
-                  className="bg-red-400 text-white font-semibold px-8 py-4 rounded-full shadow hover:bg-red-500 transition-colors duration-200 w-full md:w-auto whitespace-nowrap"
+                  className="bg-gray-200 text-gray-700 font-semibold px-8 py-4 rounded-full shadow hover:bg-gray-300 transition-colors duration-200 w-full md:w-auto"
                 >
                   ✗
                 </button>
